@@ -32,17 +32,20 @@
   }
 
   // 只取属于这一段本身的文字；里面另起一段的块级元素会单独翻译
+  // 保留原文的换行，译文按同样的位置分行；多余空白和连续空行合并掉
+  const tidy = s => s.replace(/[^\S\n]+/g, ' ').replace(/ ?\n ?/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+
   function textOf(block) {
-    if (SITE_ONLY) return block.innerText.replace(/\s+/g, ' ').trim();
+    if (SITE_ONLY) return tidy(block.innerText);
     let s = '';
     (function walk(node) {
       for (const c of node.childNodes) {
-        if (c.nodeType === Node.TEXT_NODE) s += c.data;
-        else if (c.localName === 'br') s += ' ';
+        if (c.nodeType === Node.TEXT_NODE) s += c.data.replace(/\s+/g, ' '); // 源码里的换行只是排版，不算换行
+        else if (c.localName === 'br') s += '\n';
         else if (c.nodeType === Node.ELEMENT_NODE && !c.matches('.bt-trans,script,style,noscript,template') && isInline(c)) walk(c);
       }
     })(block);
-    return s.replace(/\s+/g, ' ').trim();
+    return tidy(s);
   }
 
   // 目标语言是中文：已经是中文的段落不翻（日文含假名，照常翻）

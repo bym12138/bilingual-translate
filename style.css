@@ -3,6 +3,7 @@
 .bt-trans {
   display: block;
   margin-top: .25em;
+  white-space: pre-line;
   opacity: .85;
   color: color-mix(in srgb, currentColor 70%, #3b7ddd);
 }

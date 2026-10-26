@@ -19,11 +19,12 @@ async function requestBatch(texts, retries = 1) {
     const res = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json+protobuf', 'X-Goog-API-Key': API_KEY },
-      body: JSON.stringify([[texts.map(escapeHtml), 'auto', TARGET_LANG], 'te']),
+      // 接口按 HTML 处理，普通换行会被吞掉，换成 <br> 才能保留
+      body: JSON.stringify([[texts.map(t => escapeHtml(t).replace(/\n/g, '<br>')), 'auto', TARGET_LANG], 'te']),
     });
     if (!res.ok) throw new Error(`翻译接口返回 ${res.status}`);
     const [translations] = await res.json();
-    return translations.map(unescapeHtml);
+    return translations.map(t => unescapeHtml(t.replace(/\s*<br\s*\/?>\s*/gi, '\n')));
   } catch (err) {
     if (!retries) throw err;
     await new Promise(r => setTimeout(r, 1000));
