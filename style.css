@@ -1,0 +1,34 @@
+/* 网页译文 */
+/* 在原文颜色上混入少量蓝色：浅色/深色页面都能区分，又不抢眼 */
+.bt-trans {
+  display: block;
+  margin-top: .25em;
+  opacity: .85;
+  color: color-mix(in srgb, currentColor 70%, #3b7ddd);
+}
+.bt-trans.bt-loading::after { content: '翻译中…'; font-size: .85em; opacity: .5; }
+.bt-trans.bt-error { color: #d93025; font-size: .85em; }
+
+/* YouTube 双语字幕 */
+.bt-hide-native .ytp-caption-window-container { display: none !important; }
+.bt-yt-sub {
+  position: absolute;
+  left: 50%;
+  bottom: 70px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 85%;
+  z-index: 40;
+  text-align: center;
+  line-height: 1.45;
+  pointer-events: none;
+  transition: bottom .2s;
+  font-family: Roboto, "PingFang SC", sans-serif;
+  color: #fff;
+  background: rgba(8, 8, 8, .75);
+  padding: .2em .6em;
+  border-radius: 4px;
+}
+.ytp-autohide .bt-yt-sub { bottom: 4%; }
+.bt-yt-sub[hidden], .bt-yt-sub div[hidden] { display: none; }
+.bt-yt-sub .bt-yt-dst { color: #ffd75e; }
